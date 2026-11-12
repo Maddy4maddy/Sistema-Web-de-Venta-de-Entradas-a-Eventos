@@ -1,24 +1,27 @@
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Sistema_Ventas.Data;
-using Sistema_Ventas.Models;
+using Sistema_Ventas.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Conexion para conectarnos a SQL Server
-builder.Services.AddDbContext<ContextoDB>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("ConexionSQL")));
-
-builder.Services.AddIdentity<Usuario, IdentityRole>(options =>
-{
-    options.User.RequireUniqueEmail = true;
-})
-.AddEntityFrameworkStores<ContextoDB>()
-.AddDefaultTokenProviders();
-
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Usuario/IniciarSesion";
+        options.AccessDeniedPath = "/Usuario/AccesoDenegado";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
+    });
+
+// Registrar servicios
+builder.Services.AddScoped<ConexionBD>();
+builder.Services.AddScoped<conexionService>();
+builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<CorreoService>();
+builder.Services.AddScoped<EventoService>();
 
 var app = builder.Build();
 
@@ -41,4 +44,3 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-

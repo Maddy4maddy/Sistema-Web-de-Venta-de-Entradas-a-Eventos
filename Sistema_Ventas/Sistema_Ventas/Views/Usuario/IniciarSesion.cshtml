@@ -1,0 +1,61 @@
+﻿@model Sistema_Ventas.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+
+            <h2 class="text-center mb-4">Iniciar sesión</h2>
+
+            <form asp-controller="Usuario" asp-action="IniciarSesion" method="post">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Correo" class="form-label">
+                        Correo electrónico
+                    </label>
+                    <input asp-for="Correo" class="form-control" />
+                    <span asp-validation-for="Correo" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Contrasena" class="form-label">
+                        Contraseña
+                    </label>
+                    <input asp-for="Contrasena" class="form-control" />
+                    <span asp-validation-for="Contrasena" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        Iniciar sesión
+                    </button>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a asp-controller="Usuario"
+                       asp-action="RecuperarContrasena">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                </div>
+
+            </form>
+
+            <div class="text-center mt-3">
+                <p>¿No tienes una cuenta?</p>
+                <a asp-controller="Usuario" asp-action="Registro">
+                    Crear una cuenta
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

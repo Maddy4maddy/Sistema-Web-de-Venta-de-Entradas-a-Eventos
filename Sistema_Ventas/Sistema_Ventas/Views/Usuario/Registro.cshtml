@@ -1,0 +1,70 @@
+﻿@model Sistema_Ventas.ViewModels.RegistroViewModel
+
+@{
+    ViewData["Title"] = "Crear cuenta";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <h2 class="text-center mb-4">Crear una cuenta</h2>
+
+            @if (TempData["Mensaje"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["Mensaje"]
+                </div>
+            }
+
+            <form asp-controller="Usuario" asp-action="Registro" method="post">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Nombre" class="form-label">Nombre</label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Apellido" class="form-label">Apellido</label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Correo" class="form-label">Correo electrónico</label>
+                    <input asp-for="Correo" class="form-control" />
+                    <span asp-validation-for="Correo" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Contrasena" class="form-label">Contraseña</label>
+                    <input asp-for="Contrasena" class="form-control" />
+                    <span asp-validation-for="Contrasena" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmarContrasena" class="form-label">
+                        Confirmar contraseña
+                    </label>
+                    <input asp-for="ConfirmarContrasena" class="form-control" />
+                    <span asp-validation-for="ConfirmarContrasena" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        Registrarse
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

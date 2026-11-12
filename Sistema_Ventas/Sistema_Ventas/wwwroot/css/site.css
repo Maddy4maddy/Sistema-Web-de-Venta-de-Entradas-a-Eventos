@@ -1,0 +1,352 @@
+﻿
+/* =====================================================
+   EVENTIA - PLANTILLA GLOBAL
+   ===================================================== */
+
+
+/* 1. COLORES GENERALES */
+
+:root {
+    --azul-principal: #24344D;
+    --azul-secundario: #426A91;
+    --dorado: #C49A54;
+    --fondo: #F4F6F9;
+    --blanco: #FFFFFF;
+    --texto: #333B48;
+    --texto-secundario: #687586;
+    --borde: #E1E5EB;
+    --exito: #198754;
+    --error: #DC3545;
+}
+
+
+/* 2. CONFIGURACIÓN GENERAL */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--fondo);
+    color: var(--texto);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 15px;
+}
+
+a {
+    color: var(--azul-secundario);
+    text-decoration: none;
+}
+
+    a:hover {
+        color: var(--azul-principal);
+    }
+
+
+/* 3. BARRA DE NAVEGACIÓN */
+
+.barra-navegacion {
+    background-color: var(--azul-principal);
+    padding: 15px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+}
+
+.nombre-sistema {
+    color: var(--blanco);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+    .nombre-sistema:hover {
+        color: var(--dorado);
+    }
+
+.barra-navegacion .nav-link {
+    color: var(--blanco);
+    font-weight: 500;
+    margin: 0 8px;
+}
+
+    .barra-navegacion .nav-link:hover {
+        color: var(--dorado);
+    }
+
+.barra-navegacion .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+
+/* 4. CONTENIDO PRINCIPAL */
+
+.contenido-principal {
+    flex: 1;
+    width: 100%;
+    padding: 30px 0;
+}
+
+
+/* 5. TÍTULOS */
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--azul-principal);
+}
+
+h1 {
+    font-weight: 700;
+}
+
+h2, h3, h4 {
+    font-weight: 600;
+}
+
+
+/* 6. BOTONES GENERALES */
+
+.btn {
+    border-radius: 6px;
+    padding: 9px 18px;
+    font-weight: 600;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--azul-principal);
+    border-color: var(--azul-principal);
+    color: var(--blanco);
+}
+
+    .btn-primary:hover {
+        background-color: var(--azul-secundario);
+        border-color: var(--azul-secundario);
+        color: var(--blanco);
+    }
+
+.btn-secondary {
+    background-color: #687586;
+    border-color: #687586;
+    color: var(--blanco);
+}
+
+    .btn-secondary:hover {
+        background-color: #536174;
+        color: var(--blanco);
+    }
+
+.btn-success {
+    background-color: var(--exito);
+    border-color: var(--exito);
+}
+
+.btn-danger {
+    background-color: var(--error);
+    border-color: var(--error);
+}
+
+.btn-registro {
+    background-color: var(--dorado);
+    color: var(--azul-principal);
+    border: none;
+}
+
+    .btn-registro:hover {
+        background-color: #D8B675;
+        color: var(--azul-principal);
+    }
+
+.btn-cerrar-sesion {
+    background-color: transparent;
+    border: 1px solid var(--dorado);
+    color: var(--blanco);
+    border-radius: 6px;
+    padding: 8px 16px;
+}
+
+    .btn-cerrar-sesion:hover {
+        background-color: var(--dorado);
+        color: var(--azul-principal);
+    }
+
+
+/* 7. FORMULARIOS */
+
+.form-label {
+    color: var(--azul-principal);
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.form-control,
+.form-select {
+    width: 100%;
+    border: 1px solid var(--borde);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--texto);
+    background-color: var(--blanco);
+}
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--azul-secundario);
+        box-shadow: 0 0 0 0.2rem rgba(66, 106, 145, 0.15);
+    }
+
+textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-check-input:checked {
+    background-color: var(--azul-principal);
+    border-color: var(--azul-principal);
+}
+
+
+/* 8. TARJETAS */
+
+.card {
+    background-color: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+.card-header {
+    background-color: var(--azul-principal);
+    color: var(--blanco);
+    font-weight: 600;
+    border-radius: 9px 9px 0 0 !important;
+}
+
+    .card-header h1,
+    .card-header h2,
+    .card-header h3,
+    .card-header h4 {
+        color: var(--blanco);
+    }
+
+
+/* 9. TABLAS */
+
+.table {
+    background-color: var(--blanco);
+    vertical-align: middle;
+}
+
+    .table thead th {
+        background-color: var(--azul-principal);
+        color: var(--blanco);
+        font-weight: 600;
+        padding: 13px;
+        border-bottom: none;
+    }
+
+    .table tbody td {
+        color: var(--texto);
+        padding: 12px;
+    }
+
+    .table tbody tr:hover {
+        background-color: #F0F3F7;
+    }
+
+
+/* 10. MENSAJES Y VALIDACIONES */
+
+.alert {
+    border-radius: 7px;
+}
+
+.text-danger {
+    color: var(--error) !important;
+}
+
+.text-success {
+    color: var(--exito) !important;
+}
+
+.field-validation-error {
+    font-size: 13px;
+}
+
+.validation-summary-errors {
+    color: var(--error);
+}
+
+
+/* 11. PÁGINA PRINCIPAL */
+
+.titulo-inicio {
+    color: var(--azul-principal);
+    font-size: 38px;
+    font-weight: 700;
+}
+
+.descripcion-inicio {
+    color: var(--texto-secundario);
+    font-size: 17px;
+    margin-top: 15px;
+    line-height: 1.7;
+}
+
+
+/* 12. PIE DE PÁGINA */
+
+.pie-pagina {
+    background-color: var(--azul-principal);
+    color: var(--blanco);
+    padding: 22px 0;
+    margin-top: auto;
+}
+
+    .pie-pagina p {
+        color: var(--blanco);
+        margin-bottom: 5px;
+    }
+
+    .pie-pagina small {
+        color: #D5DCE5;
+    }
+
+
+/* 13. DISEÑO PARA CELULARES */
+
+@media (max-width: 768px) {
+
+    .nombre-sistema {
+        font-size: 21px;
+    }
+
+    .contenido-principal {
+        padding: 20px 0;
+    }
+
+    .titulo-inicio {
+        font-size: 30px;
+    }
+
+    .descripcion-inicio {
+        font-size: 15px;
+    }
+
+    .barra-navegacion .nav-link {
+        margin: 5px 0;
+    }
+
+    .btn-cerrar-sesion {
+        margin-top: 8px;
+    }
+
+    .table {
+        font-size: 13px;
+    }
+}

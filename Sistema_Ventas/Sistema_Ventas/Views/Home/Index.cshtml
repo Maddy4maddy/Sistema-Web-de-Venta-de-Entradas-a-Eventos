@@ -1,0 +1,190 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="container py-5">
+
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <div class="text-center mb-5">
+            <h1 class="titulo-inicio">Bienvenido a EVENTIA</h1>
+            <h4>Hola, @User.Identity.Name</h4>
+        </div>
+
+        @if (User.IsInRole("Cliente"))
+        {
+            <div class="text-center mb-4">
+                <p class="descripcion-inicio">
+                    Encuentra y compra entradas para tus eventos favoritos.
+                </p>
+
+                <a asp-controller="Evento"
+                   asp-action="Cartelera"
+                   class="btn btn-primary mt-3">
+                    Ver eventos
+                </a>
+            </div>
+
+            <div class="row justify-content-center g-4 mt-4">
+
+                <div class="col-md-5">
+                    <div class="card h-100 p-4">
+                        <h4>Consultar eventos</h4>
+                        <p>
+                            Explora los eventos disponibles y encuentra
+                            actividades de tu interés.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="card h-100 p-4">
+                        <h4>Mis compras</h4>
+                        <p>
+                            Consulta tu historial de compras y tus
+                            entradas adquiridas.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="card h-100 p-4">
+                        <h4>Solicitar anulación</h4>
+                        <p>
+                            Consulta la opción de solicitar la anulación
+                            de una compra antes del evento.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        }
+
+        @if (User.IsInRole("Organizador"))
+        {
+            <div class="text-center mb-4">
+                <p class="descripcion-inicio">
+                    Administra tus eventos y consulta su actividad de ventas.
+                </p>
+            </div>
+
+            <div class="row justify-content-center g-4 mt-4">
+
+                <div class="col-md-5">
+                    <div class="card h-100 p-4">
+                        <h4>Mis eventos</h4>
+                        <p>
+                            Administra los eventos que tienes a tu cargo.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="card h-100 p-4">
+                        <h4>Crear y administrar eventos</h4>
+                        <p>
+                            Crea, edita, publica y cancela eventos,
+                            incluyendo sus sectores y precios.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="card h-100 p-4">
+                        <h4>Reportes de ventas</h4>
+                        <p>
+                            Consulta las entradas vendidas, la recaudación
+                            y la ocupación por sector.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="card h-100 p-4">
+                        <h4>Validar entradas</h4>
+                        <p>
+                            Verifica los códigos de las entradas
+                            al momento del acceso al evento.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        }
+
+        @if (User.IsInRole("Administrador"))
+        {
+            <div class="text-center mb-4">
+                <p class="descripcion-inicio">
+                    Administra los usuarios y organizadores del sistema.
+                </p>
+            </div>
+
+            <div class="row justify-content-center g-4 mt-4">
+
+                <div class="col-md-5">
+                    <div class="card h-100 p-4">
+                        <h4>Gestionar usuarios</h4>
+                        <p>
+                            Administra las cuentas de usuario,
+                            sus estados y permisos.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="card h-100 p-4">
+                        <h4>Gestionar organizadores</h4>
+                        <p>
+                            Administra los organizadores y la asignación
+                            de roles dentro del sistema.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        }
+    }
+    else
+    {
+        <div class="text-center mb-5">
+            <h1 class="titulo-inicio">Bienvenido a EVENTIA</h1>
+
+            <p class="descripcion-inicio">
+                Encuentra eventos y descubre actividades de tu interés
+                desde un solo lugar.
+            </p>
+
+            <a asp-controller="Evento"
+               asp-action="Cartelera"
+               class="btn btn-primary mt-3">
+                Ver eventos
+            </a>
+        </div>
+
+        <div class="row justify-content-center g-4 mt-4">
+
+            <div class="col-md-5">
+                <div class="card h-100 p-4">
+                    <h4>Consultar eventos</h4>
+                    <p>
+                        Explora los eventos disponibles y encuentra
+                        actividades de tu interés.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card h-100 p-4">
+                    <h4>Conoce EVENTIA</h4>
+                    <p>
+                        Descubre una variedad de actividades y eventos
+                        disponibles para el público.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    }
+
+</div>
