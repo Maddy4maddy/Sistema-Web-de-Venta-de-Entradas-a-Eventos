@@ -60,5 +60,38 @@ namespace Sistema_Ventas.Services
             await cliente.SendAsync(mensaje);
             await cliente.DisconnectAsync(true);
         }
+        public async Task EnviarConfirmacionCompra(string correoDestino, string nombreEvento, int cantidad, decimal total, string codigoEntrada)
+        {
+            string correoEmisor = configuration["Correo:Gmail"]!;
+            string contrasenaAplicacion = configuration["Correo:ContrasenaAplicacion"]!;
+
+            var mensaje = new MimeMessage();
+            mensaje.From.Add(new MailboxAddress("EVENTIA", correoEmisor));
+            mensaje.To.Add(MailboxAddress.Parse(correoDestino));
+            mensaje.Subject = "Confirmación de compra - EVENTIA";
+
+            mensaje.Body = new TextPart("html")
+            {
+                Text = $@"
+            <div style='font-family: Arial; max-width: 500px; margin: auto; padding: 25px; border: 1px solid #ddd; border-radius: 10px;'>
+                <h2 style='color: #24344D;'>EVENTIA</h2>
+                <h3>¡Compra exitosa!</h3>
+                <p>Gracias por tu compra. Aquí están los detalles:</p>
+                <ul>
+                    <li><strong>Evento:</strong> {nombreEvento}</li>
+                    <li><strong>Cantidad:</strong> {cantidad} entradas</li>
+                    <li><strong>Total pagado:</strong> ₡{total:N2}</li>
+                </ul>
+                <h4 style='color: #426A91;'>Tu código de entrada: {codigoEntrada}</h4>
+                <p>Presenta este código en la entrada del evento.</p>
+            </div>"
+            };
+
+            using var cliente = new SmtpClient();
+            await cliente.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+            await cliente.AuthenticateAsync(correoEmisor, contrasenaAplicacion);
+            await cliente.SendAsync(mensaje);
+            await cliente.DisconnectAsync(true);
+        }
     }
 }

@@ -1,0 +1,179 @@
+@model Sistema_Ventas.ViewModels.PagoViewModel
+@{
+    ViewData["Title"] = "Pasarela de Pago";
+}
+
+<div class="container mt-5 mb-5">
+    
+    <div class="text-center mb-5">
+        <h2 class="fw-bold" style="color: var(--azul-principal);">Finalizar Compra</h2>
+        <p class="text-muted">Completa tus datos para procesar el pago de forma segura.</p>
+    </div>
+
+    <div class="row justify-content-center g-4">
+        
+        <!-- RESUMEN Y TEMPORIZADOR -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    <h4 class="mb-0">Resumen de tu orden</h4>
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="mb-3">@Model.NombreEvento</h5>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Sector:</span>
+                        <span class="fw-bold">@Model.NombreSector</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Cantidad:</span>
+                        <span class="fw-bold">@Model.Cantidad entrada(s)</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Precio unitario:</span>
+                        <span>₡@((Model.Monto / Model.Cantidad).ToString("N2"))</span>
+                    </div>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <h5 class="mb-0">Total a pagar:</h5>
+                        <h3 class="mb-0 fw-bold" style="color: var(--dorado);">
+                            ₡@Model.Monto.ToString("N2")
+                        </h3>
+                    </div>
+
+                    <!-- TEMPORIZADOR -->
+                    <div class="mt-4 pt-3 border-top text-center">
+                        <span class="text-dark fw-bold" style="font-size: 1.1rem;">
+                            <i class="bi bi-clock"></i> Tiempo restante:
+                        </span>
+                        <span class="fw-bold ms-2" id="temporizador" style="color: #000000; font-size: 1.4rem;">--:--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORMULARIO -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <h4 class="mb-4">Datos de la tarjeta</h4>
+
+                    <form asp-action="Pagar" method="post" id="formPago">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="IdReserva" />
+                        <input type="hidden" asp-for="Monto" />
+                        <input type="hidden" asp-for="NombreEvento" />
+                        <input type="hidden" asp-for="Cantidad" />
+                        <input type="hidden" asp-for="NombreSector" />
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <!-- NÚMERO DE TARJETA CON DISEÑO BANCARIO -->
+                        <div class="mb-4">
+                            <label asp-for="NumeroTarjeta" class="form-label">Número de tarjeta</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-credit-card"></i></span>
+                                <input asp-for="NumeroTarjeta" 
+                                       class="form-control border-start-0 ps-0 fs-5" 
+                                       placeholder="0000 0000 0000 0000" 
+                                       maxlength="19" 
+                                       id="numTarjeta" 
+                                       autocomplete="off"
+                                       style="letter-spacing: 2px; font-family: 'Courier New', monospace;" />
+                            </div>
+                            <span asp-validation-for="NumeroTarjeta" class="text-danger small"></span>
+                            <small class="text-muted d-block mt-1">Prueba: 4111 1111 1111 1111 </small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="NombreTitular" class="form-label">Nombre del titular</label>
+                            <input asp-for="NombreTitular" class="form-control" placeholder="Como aparece en la tarjeta" autocomplete="off" />
+                            <span asp-validation-for="NombreTitular" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="FechaVencimiento" class="form-label">Vencimiento</label>
+                                <input asp-for="FechaVencimiento" class="form-control" placeholder="MM/AA" maxlength="5" id="fechaVenc" autocomplete="off" />
+                                <span asp-validation-for="FechaVencimiento" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="CVV" class="form-label">CVV</label>
+                                <input asp-for="CVV" class="form-control" placeholder="123" maxlength="3" autocomplete="off" />
+                                <span asp-validation-for="CVV" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg" id="btnPagar">
+                                Pagar ₡@Model.Monto.ToString("N2")
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- BOTÓN CANCELAR -->
+                    <div class="d-grid gap-2 mt-2">
+                        <form asp-action="Cancelar" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="idReserva" value="@Model.IdReserva" />
+                            <button type="submit" class="btn btn-outline-secondary w-100">
+                                Cancelar reserva y volver al evento
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // --- TEMPORIZADOR ---
+        let segundos = @ViewBag.SegundosRestantes;
+        const display = document.getElementById('temporizador');
+
+        function actualizarTemporizador() {
+            if (segundos <= 0) {
+                display.innerText = "00:00";
+                window.location.reload(); 
+                return;
+            }
+            const m = Math.floor(segundos / 60).toString().padStart(2, '0');
+            const s = (segundos % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            segundos--;
+            setTimeout(actualizarTemporizador, 1000);
+        }
+        actualizarTemporizador();
+
+        // --- FORMATO TARJETA ---
+        document.getElementById('numTarjeta').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            // Agrupa en bloques de 4 y los une con un espacio
+            e.target.value = value.match(/.{1,4}/g)?.join(' ') || value;
+        });
+
+        // --- FORMATO FECHA ---
+        document.getElementById('fechaVenc').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            e.target.value = value;
+        });
+
+        // --- VALIDACIÓN FINAL ANTES DE ENVIAR ---
+        document.getElementById('formPago').addEventListener('submit', function () {
+            const inputTarjeta = document.getElementById('numTarjeta');
+            inputTarjeta.value = inputTarjeta.value.replace(/\s+/g, '');
+
+            const btn = document.getElementById('btnPagar');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
+        });
+    </script>
+}

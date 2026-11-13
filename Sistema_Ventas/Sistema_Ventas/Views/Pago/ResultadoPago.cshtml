@@ -1,0 +1,59 @@
+@{
+    ViewData["Title"] = "Resultado del Pago";
+    string estado = ViewBag.Estado;
+    string mensaje = ViewBag.Mensaje;
+    int idReserva = ViewBag.IdReserva;
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            
+            @if (estado == "Aprobado")
+            {
+                <div class="card shadow border-success">
+                    <div class="card-body p-5">
+                        <h1 class="display-4 text-success"></h1>
+                        <h3 class="text-success">¡Pago Aprobado!</h3>
+                        <p class="lead">@mensaje</p>
+                        <hr />
+                        <p class="text-muted">Tus entradas han sido emitidas correctamente.</p>
+                        <a asp-controller="Evento" asp-action="Cartelera" class="btn btn-primary mt-3">
+                            Volver a la cartelera
+                        </a>
+                    </div>
+                </div>
+            }
+            else if (estado == "Rechazado")
+            {
+                <div class="card shadow border-danger">
+                    <div class="card-body p-5">
+                        <h1 class="display-4 text-danger"></h1>
+                        <h3 class="text-danger">Pago Rechazado</h3>
+                        <p class="lead">@mensaje</p>
+                        <hr />
+                        <p class="text-muted">Puedes intentar con otra tarjeta mientras tu reserva siga vigente.</p>
+                        <a asp-controller="Pago" asp-action="Pagar" asp-route-idReserva="@idReserva" class="btn btn-warning mt-3">
+                            Reintentar pago
+                        </a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card shadow border-warning">
+                    <div class="card-body p-5">
+                        <h1 class="display-4 text-warning"></h1>
+                        <h3 class="text-warning">Error en el Pago</h3>
+                        <p class="lead">@mensaje</p>
+                        <hr />
+                        <a asp-controller="Pago" asp-action="Pagar" asp-route-idReserva="@idReserva" class="btn btn-warning mt-3">
+                            Intentar nuevamente
+                        </a>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

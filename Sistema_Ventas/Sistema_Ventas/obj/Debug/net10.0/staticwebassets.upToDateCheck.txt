@@ -1,0 +1,6 @@
+wwwroot\css\site.css
+wwwroot\img\eventos\carrera-recreativa.jpg
+wwwroot\img\eventos\feria-gastronomica.jpg
+wwwroot\img\eventos\festival-musica.jpg
+wwwroot\img\eventos\obra-teatro.jpg
+C:\Users\maddy\source\repos\Parq1926\Sistema-Web-de-Venta-de-Entradas-a-Eventos\Sistema_Ventas\Sistema_Ventas\wwwroot\css\site.css

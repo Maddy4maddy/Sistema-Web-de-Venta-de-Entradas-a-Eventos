@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Sistema_Ventas.Data;
 using Sistema_Ventas.Models;
 using System.Data;
@@ -50,24 +49,16 @@ namespace Sistema_Ventas.Services
             using SqlCommand comando = new SqlCommand(consulta, conexion);
 
             comando.Parameters.Add("@Nombre", SqlDbType.VarChar, 150).Value =
-                string.IsNullOrWhiteSpace(nombre)
-                    ? DBNull.Value
-                    : nombre.Trim();
+                string.IsNullOrWhiteSpace(nombre) ? DBNull.Value : nombre.Trim();
 
             comando.Parameters.Add("@Categoria", SqlDbType.VarChar, 100).Value =
-                string.IsNullOrWhiteSpace(categoria)
-                    ? DBNull.Value
-                    : categoria.Trim();
+                string.IsNullOrWhiteSpace(categoria) ? DBNull.Value : categoria.Trim();
 
             comando.Parameters.Add("@Fecha", SqlDbType.DateTime2).Value =
-                fecha.HasValue
-                    ? fecha.Value.Date
-                    : DBNull.Value;
+                fecha.HasValue ? fecha.Value.Date : DBNull.Value;
 
             comando.Parameters.Add("@Ciudad", SqlDbType.VarChar, 100).Value =
-                string.IsNullOrWhiteSpace(ciudad)
-                    ? DBNull.Value
-                    : ciudad.Trim();
+                string.IsNullOrWhiteSpace(ciudad) ? DBNull.Value : ciudad.Trim();
 
             await conexion.OpenAsync();
 
@@ -79,16 +70,12 @@ namespace Sistema_Ventas.Services
                 {
                     IdEvento = Convert.ToInt32(reader["IdEvento"]),
                     Nombre = reader["Nombre"].ToString()!,
-                    Descripcion = reader["Descripcion"] == DBNull.Value
-                        ? string.Empty
-                        : reader["Descripcion"].ToString()!,
+                    Descripcion = reader["Descripcion"] == DBNull.Value ? string.Empty : reader["Descripcion"].ToString()!,
                     Categoria = reader["Categoria"].ToString()!,
                     Fecha = Convert.ToDateTime(reader["Fecha"]),
                     Lugar = reader["Lugar"].ToString()!,
                     Ciudad = reader["Ciudad"].ToString()!,
-                    Imagen = reader["Imagen"] == DBNull.Value
-                        ? string.Empty
-                        : reader["Imagen"].ToString()!,
+                    Imagen = reader["Imagen"] == DBNull.Value ? string.Empty : reader["Imagen"].ToString()!,
                     PrecioInicial = Convert.ToDecimal(reader["PrecioInicial"]),
                     Activo = Convert.ToBoolean(reader["Activo"]),
                     FechaCreacion = Convert.ToDateTime(reader["FechaCreacion"])
@@ -98,6 +85,72 @@ namespace Sistema_Ventas.Services
             }
 
             return eventos;
+        }
+
+        public async Task<Evento?> ObtenerEventoPorId(int idEvento)
+        {
+            using SqlConnection conexion = conexionBD.ObtenerConexion();
+            string consulta = "SELECT * FROM Eventos WHERE IdEvento = @IdEvento AND Activo = 1";
+            using SqlCommand comando = new SqlCommand(consulta, conexion);
+            comando.Parameters.Add("@IdEvento", SqlDbType.Int).Value = idEvento;
+            await conexion.OpenAsync();
+            using SqlDataReader reader = await comando.ExecuteReaderAsync();
+            if (!await reader.ReadAsync()) return null;
+            return new Evento
+            {
+                IdEvento = Convert.ToInt32(reader["IdEvento"]),
+                Nombre = reader["Nombre"].ToString()!,
+                Descripcion = reader["Descripcion"] == DBNull.Value ? string.Empty : reader["Descripcion"].ToString()!,
+                Categoria = reader["Categoria"].ToString()!,
+                Fecha = Convert.ToDateTime(reader["Fecha"]),
+                Lugar = reader["Lugar"].ToString()!,
+                Ciudad = reader["Ciudad"].ToString()!,
+                Imagen = reader["Imagen"] == DBNull.Value ? string.Empty : reader["Imagen"].ToString()!,
+                PrecioInicial = Convert.ToDecimal(reader["PrecioInicial"]),
+                Activo = true
+            };
+        }
+
+        public async Task<List<Sector>> ObtenerSectoresPorEvento(int idEvento)
+        {
+            List<Sector> sectores = new List<Sector>();
+            using SqlConnection conexion = conexionBD.ObtenerConexion();
+            string consulta = @"
+                SELECT 
+                    S.IdSector, 
+                    S.IdEvento, 
+                    S.Nombre, 
+                    S.Precio, 
+                    S.Capacidad,
+                    S.Capacidad - ISNULL((
+                        SELECT SUM(R.Cantidad) 
+                        FROM Reservas R 
+                        WHERE R.IdSector = S.IdSector 
+                          AND (
+                               (R.Estado = 'Pendiente' AND R.FechaExpiracion > GETDATE())
+                               OR R.Estado = 'Pagada'
+                          )
+                    ), 0) AS Disponibles
+                FROM Sectores S 
+                WHERE S.IdEvento = @IdEvento";
+
+            using SqlCommand comando = new SqlCommand(consulta, conexion);
+            comando.Parameters.Add("@IdEvento", SqlDbType.Int).Value = idEvento;
+            await conexion.OpenAsync();
+            using SqlDataReader reader = await comando.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                sectores.Add(new Sector
+                {
+                    IdSector = Convert.ToInt32(reader["IdSector"]),
+                    IdEvento = Convert.ToInt32(reader["IdEvento"]),
+                    Nombre = reader["Nombre"].ToString()!,
+                    Precio = Convert.ToDecimal(reader["Precio"]),
+                    Capacidad = Convert.ToInt32(reader["Capacidad"]),
+                    Disponibles = Convert.ToInt32(reader["Disponibles"])
+                });
+            }
+            return sectores;
         }
     }
 }
