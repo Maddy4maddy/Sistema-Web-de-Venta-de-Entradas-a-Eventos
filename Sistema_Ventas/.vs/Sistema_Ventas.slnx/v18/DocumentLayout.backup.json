@@ -1,12 +1,105 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Sistema-Web-de-Venta-de-Entradas-a-Eventos\\Sistema_Ventas\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DFBBE1DD-C279-27E0-CEC4-1FFEA309FF95}|Sistema_Ventas\\Sistema_Ventas.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\sistema-web-de-venta-de-entradas-a-eventos\\sistema_ventas\\sistema_ventas\\views\\pago\\resultadopago.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{DFBBE1DD-C279-27E0-CEC4-1FFEA309FF95}|Sistema_Ventas\\Sistema_Ventas.csproj|solutionrelative:sistema_ventas\\views\\pago\\resultadopago.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DFBBE1DD-C279-27E0-CEC4-1FFEA309FF95}|Sistema_Ventas\\Sistema_Ventas.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\sistema-web-de-venta-de-entradas-a-eventos\\sistema_ventas\\sistema_ventas\\views\\pago\\pagar.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{DFBBE1DD-C279-27E0-CEC4-1FFEA309FF95}|Sistema_Ventas\\Sistema_Ventas.csproj|solutionrelative:sistema_ventas\\views\\pago\\pagar.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DFBBE1DD-C279-27E0-CEC4-1FFEA309FF95}|Sistema_Ventas\\Sistema_Ventas.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\sistema-web-de-venta-de-entradas-a-eventos\\sistema_ventas\\sistema_ventas\\controllers\\usuariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DFBBE1DD-C279-27E0-CEC4-1FFEA309FF95}|Sistema_Ventas\\Sistema_Ventas.csproj|solutionrelative:sistema_ventas\\controllers\\usuariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DFBBE1DD-C279-27E0-CEC4-1FFEA309FF95}|Sistema_Ventas\\Sistema_Ventas.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\sistema-web-de-venta-de-entradas-a-eventos\\sistema_ventas\\sistema_ventas\\controllers\\pagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DFBBE1DD-C279-27E0-CEC4-1FFEA309FF95}|Sistema_Ventas\\Sistema_Ventas.csproj|solutionrelative:sistema_ventas\\controllers\\pagocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DFBBE1DD-C279-27E0-CEC4-1FFEA309FF95}|Sistema_Ventas\\Sistema_Ventas.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\sistema-web-de-venta-de-entradas-a-eventos\\sistema_ventas\\sistema_ventas\\controllers\\eventocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DFBBE1DD-C279-27E0-CEC4-1FFEA309FF95}|Sistema_Ventas\\Sistema_Ventas.csproj|solutionrelative:sistema_ventas\\controllers\\eventocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ResultadoPago.cshtml",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Sistema-Web-de-Venta-de-Entradas-a-Eventos\\Sistema_Ventas\\Sistema_Ventas\\Views\\Pago\\ResultadoPago.cshtml",
+              "RelativeDocumentMoniker": "Sistema_Ventas\\Views\\Pago\\ResultadoPago.cshtml",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Sistema-Web-de-Venta-de-Entradas-a-Eventos\\Sistema_Ventas\\Sistema_Ventas\\Views\\Pago\\ResultadoPago.cshtml",
+              "RelativeToolTip": "Sistema_Ventas\\Views\\Pago\\ResultadoPago.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-13T06:46:54.114Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Pagar.cshtml",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Sistema-Web-de-Venta-de-Entradas-a-Eventos\\Sistema_Ventas\\Sistema_Ventas\\Views\\Pago\\Pagar.cshtml",
+              "RelativeDocumentMoniker": "Sistema_Ventas\\Views\\Pago\\Pagar.cshtml",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Sistema-Web-de-Venta-de-Entradas-a-Eventos\\Sistema_Ventas\\Sistema_Ventas\\Views\\Pago\\Pagar.cshtml",
+              "RelativeToolTip": "Sistema_Ventas\\Views\\Pago\\Pagar.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-13T06:46:46.271Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UsuarioController.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Sistema-Web-de-Venta-de-Entradas-a-Eventos\\Sistema_Ventas\\Sistema_Ventas\\Controllers\\UsuarioController.cs",
+              "RelativeDocumentMoniker": "Sistema_Ventas\\Controllers\\UsuarioController.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Sistema-Web-de-Venta-de-Entradas-a-Eventos\\Sistema_Ventas\\Sistema_Ventas\\Controllers\\UsuarioController.cs",
+              "RelativeToolTip": "Sistema_Ventas\\Controllers\\UsuarioController.cs",
+              "ViewState": "AgIAAMQAAAAAAAAAAAAcwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T06:45:59.545Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PagoController.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Sistema-Web-de-Venta-de-Entradas-a-Eventos\\Sistema_Ventas\\Sistema_Ventas\\Controllers\\PagoController.cs",
+              "RelativeDocumentMoniker": "Sistema_Ventas\\Controllers\\PagoController.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Sistema-Web-de-Venta-de-Entradas-a-Eventos\\Sistema_Ventas\\Sistema_Ventas\\Controllers\\PagoController.cs",
+              "RelativeToolTip": "Sistema_Ventas\\Controllers\\PagoController.cs",
+              "ViewState": "AgIAAJUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T06:45:55.14Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EventoController.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Sistema-Web-de-Venta-de-Entradas-a-Eventos\\Sistema_Ventas\\Sistema_Ventas\\Controllers\\EventoController.cs",
+              "RelativeDocumentMoniker": "Sistema_Ventas\\Controllers\\EventoController.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Sistema-Web-de-Venta-de-Entradas-a-Eventos\\Sistema_Ventas\\Sistema_Ventas\\Controllers\\EventoController.cs",
+              "RelativeToolTip": "Sistema_Ventas\\Controllers\\EventoController.cs",
+              "ViewState": "AgIAAFYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T06:45:48.793Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
