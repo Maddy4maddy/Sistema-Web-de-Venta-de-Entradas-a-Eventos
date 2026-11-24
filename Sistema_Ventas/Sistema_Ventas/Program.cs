@@ -24,6 +24,7 @@ builder.Services.AddScoped<CorreoService>();
 builder.Services.AddScoped<EventoService>();
 builder.Services.AddScoped<ReservaService>();
 builder.Services.AddScoped<PagoService>(); 
+builder.Services.AddScoped<EntradaService>();
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
