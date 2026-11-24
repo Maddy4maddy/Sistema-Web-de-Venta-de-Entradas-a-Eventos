@@ -1,0 +1,12 @@
+root = true
+
+[*]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{cs,cshtml,csproj,sln,slnx,sql,json,css,js,html}]
+end_of_line = crlf
+
+[*.{md,sh,yml,yaml}]
+end_of_line = lf
