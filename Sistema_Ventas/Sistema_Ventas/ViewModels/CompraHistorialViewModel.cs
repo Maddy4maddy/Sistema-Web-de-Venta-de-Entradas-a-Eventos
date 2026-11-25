@@ -8,7 +8,7 @@
         public string NombreSector { get; set; } = string.Empty;
         public int Cantidad { get; set; }
         public decimal Total { get; set; }
-        public string CodigoEntrada { get; set; } = string.Empty;
+        public List<string> CodigosEntradas { get; set; } = new List<string>();
         public DateTime FechaCompra { get; set; }
     }
 }

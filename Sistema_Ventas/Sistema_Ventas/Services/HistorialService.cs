@@ -29,33 +29,44 @@ namespace Sistema_Ventas.Services
                     S.Nombre AS NombreSector,
                     R.Cantidad,
                     C.Total,
-                    C.CodigoEntrada,
+                    T.Codigo,
                     C.FechaCompra
                 FROM Compras C
                 INNER JOIN Reservas R ON C.IdReserva = R.IdReserva
                 INNER JOIN Sectores S ON R.IdSector = S.IdSector
                 INNER JOIN Eventos E ON S.IdEvento = E.IdEvento
+                LEFT JOIN Entradas T ON T.IdCompra = C.IdCompra
                 WHERE C.IdUsuario = @IdUsuario
-                ORDER BY C.FechaCompra DESC";
+                ORDER BY C.FechaCompra DESC, C.IdCompra DESC, T.IdEntrada";
 
             using SqlCommand comando = new SqlCommand(consulta, conexion);
             comando.Parameters.Add("@IdUsuario", SqlDbType.Int).Value = idUsuario;
 
             using SqlDataReader lector = await comando.ExecuteReaderAsync();
+            CompraHistorialViewModel? compraActual = null;
 
             while (await lector.ReadAsync())
             {
-                compras.Add(new CompraHistorialViewModel
+                int idCompra = Convert.ToInt32(lector["IdCompra"]);
+                if (compraActual == null || compraActual.IdCompra != idCompra)
                 {
-                    IdCompra = Convert.ToInt32(lector["IdCompra"]),
-                    NombreEvento = lector["NombreEvento"].ToString()!,
-                    FechaEvento = Convert.ToDateTime(lector["FechaEvento"]),
-                    NombreSector = lector["NombreSector"].ToString()!,
-                    Cantidad = Convert.ToInt32(lector["Cantidad"]),
-                    Total = Convert.ToDecimal(lector["Total"]),
-                    CodigoEntrada = lector["CodigoEntrada"].ToString()!,
-                    FechaCompra = Convert.ToDateTime(lector["FechaCompra"])
-                });
+                    compraActual = new CompraHistorialViewModel
+                    {
+                        IdCompra = idCompra,
+                        NombreEvento = lector["NombreEvento"].ToString()!,
+                        FechaEvento = Convert.ToDateTime(lector["FechaEvento"]),
+                        NombreSector = lector["NombreSector"].ToString()!,
+                        Cantidad = Convert.ToInt32(lector["Cantidad"]),
+                        Total = Convert.ToDecimal(lector["Total"]),
+                        FechaCompra = Convert.ToDateTime(lector["FechaCompra"])
+                    };
+                    compras.Add(compraActual);
+                }
+
+                if (lector["Codigo"] is string codigo)
+                {
+                    compraActual.CodigosEntradas.Add(codigo);
+                }
             }
 
             return compras;

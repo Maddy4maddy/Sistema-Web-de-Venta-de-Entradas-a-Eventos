@@ -24,7 +24,7 @@
                         <th>Sector</th>
                         <th>Entradas</th>
                         <th>Total</th>
-                        <th>Código de entrada</th>
+                        <th>Códigos de entradas</th>
                         <th>Fecha de compra</th>
                     </tr>
                 </thead>
@@ -37,7 +37,19 @@
                             <td>@compra.NombreSector</td>
                             <td>@compra.Cantidad</td>
                             <td>₡ @compra.Total.ToString("N2")</td>
-                            <td>@compra.CodigoEntrada</td>
+                            <td>
+                                @if (compra.CodigosEntradas.Count == 0)
+                                {
+                                    <span class="text-muted">Sin entradas emitidas</span>
+                                }
+                                else
+                                {
+                                    @foreach (var codigo in compra.CodigosEntradas)
+                                    {
+                                        <div class="text-break">@codigo</div>
+                                    }
+                                }
+                            </td>
                             <td>@compra.FechaCompra.ToString("dd/MM/yyyy HH:mm")</td>
                         </tr>
                     }
