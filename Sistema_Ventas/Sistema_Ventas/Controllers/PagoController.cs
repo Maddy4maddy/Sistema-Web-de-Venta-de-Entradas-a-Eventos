@@ -14,12 +14,19 @@ namespace Sistema_Ventas.Controllers
     {
         private readonly PagoService pagoService;
         private readonly ReservaService reservaService;
+        private readonly EntradaService entradaService;
+        private readonly ConfirmacionCompraCorreoService confirmacionCompraCorreoService;
+        private readonly ILogger<PagoController> logger;
         private readonly ConexionBD conexionBD;
 
-        public PagoController(PagoService pagoService, ReservaService reservaService, ConexionBD conexionBD)
+        public PagoController(PagoService pagoService, ReservaService reservaService, EntradaService entradaService,
+            ConfirmacionCompraCorreoService confirmacionCompraCorreoService, ILogger<PagoController> logger, ConexionBD conexionBD)
         {
             this.pagoService = pagoService;
             this.reservaService = reservaService;
+            this.entradaService = entradaService;
+            this.confirmacionCompraCorreoService = confirmacionCompraCorreoService;
+            this.logger = logger;
             this.conexionBD = conexionBD;
         }
 
@@ -111,21 +118,53 @@ namespace Sistema_Ventas.Controllers
             string tarjetaLimpia = modelo.NumeroTarjeta.Replace(" ", "");
             var resultado = await pagoService.ProcesarPago(modelo.IdReserva, modelo.Monto, tarjetaLimpia);
 
+            int? idCompra = null;
+            if (resultado.Estado == "Aprobado")
+            {
+                idCompra = await entradaService.GenerarEntradas(modelo.IdReserva);
+            }
+
             TempData["EstadoPago"] = resultado.Estado;
             TempData["MensajePago"] = resultado.Mensaje;
             TempData["IdReserva"] = modelo.IdReserva;
+            if (idCompra.HasValue)
+            {
+                TempData["IdCompra"] = idCompra.Value;
+
+                try
+                {
+                    int idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                    await confirmacionCompraCorreoService.EnviarConfirmacion(idCompra.Value, idUsuario);
+                }
+                catch (Exception error)
+                {
+                    logger.LogWarning("No se pudo enviar la confirmación de la compra {IdCompra}. Tipo: {TipoError}.",
+                        idCompra.Value, error.GetType().Name);
+                }
+            }
 
             return RedirectToAction("ResultadoPago");
         }
 
         [HttpGet]
-        public IActionResult ResultadoPago()
+        public async Task<IActionResult> ResultadoPago()
         {
             if (TempData["EstadoPago"] == null) return RedirectToAction("Cartelera", "Evento");
-            ViewBag.Estado = TempData["EstadoPago"].ToString();
-            ViewBag.Mensaje = TempData["MensajePago"].ToString();
-            ViewBag.IdReserva = TempData["IdReserva"];
-            return View();
+
+            ResultadoPagoViewModel modelo = new ResultadoPagoViewModel
+            {
+                Estado = TempData["EstadoPago"]!.ToString()!,
+                Mensaje = TempData["MensajePago"]!.ToString()!,
+                IdReserva = Convert.ToInt32(TempData["IdReserva"])
+            };
+
+            if (TempData["IdCompra"] != null)
+            {
+                int idCompra = Convert.ToInt32(TempData["IdCompra"]);
+                modelo.CodigosEntradas = await entradaService.ObtenerCodigos(idCompra);
+            }
+
+            return View(modelo);
         }
 
         private bool ValidarFechaVencimiento(string fecha)

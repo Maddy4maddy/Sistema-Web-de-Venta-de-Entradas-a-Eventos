@@ -57,7 +57,9 @@ namespace Sistema_Ventas.Services
             string consultaDisponibilidad = @"
                 SELECT Capacidad - ISNULL((
                     SELECT SUM(Cantidad) FROM Reservas 
-                    WHERE IdSector = @IdSector AND Estado = 'Pendiente' AND FechaExpiracion > GETDATE()
+                    WHERE IdSector = @IdSector
+                      AND ((Estado = 'Pendiente' AND FechaExpiracion > GETDATE())
+                           OR Estado = 'Pagada')
                 ), 0) AS Disponibles
                 FROM Sectores WHERE IdSector = @IdSector";
 
