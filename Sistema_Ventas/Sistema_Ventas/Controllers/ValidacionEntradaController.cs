@@ -6,6 +6,7 @@ using System.Security.Claims;
 
 namespace Sistema_Ventas.Controllers
 {
+    // Solo los organizadores pueden acceder a validar las entradas.
     [Authorize(Roles = "Organizador")]
     public class ValidacionEntradaController : Controller
     {
@@ -33,6 +34,7 @@ namespace Sistema_Ventas.Controllers
                 return View(modelo);
             }
 
+            // Obtiene el identificador de la sesión
             if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int idOrganizador))
             {
                 return Forbid();

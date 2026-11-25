@@ -18,6 +18,7 @@ namespace Sistema_Ventas.Services
             using SqlConnection conexion = conexionBD.ObtenerConexion();
             await conexion.OpenAsync();
 
+            // Actualiza la entrada en una sola operación para evitar que se valide dos veces.
             string consulta = @"
                 UPDATE E
                 SET E.Estado = 'Usada', E.FechaUso = GETDATE()
@@ -32,11 +33,14 @@ namespace Sistema_Ventas.Services
                   AND R.Estado = 'Pagada'
                   AND V.Activo = 1
                   AND V.IdOrganizador = @IdOrganizador";
+            // Los filtros son para garantizar que la entrada pertenezca a un evento activo del organizador
+            // y que las compra como la reserva esten pagadas.
 
             using SqlCommand comando = new SqlCommand(consulta, conexion);
             comando.Parameters.Add("@Codigo", SqlDbType.VarChar, 50).Value = codigo.Trim().ToUpperInvariant();
             comando.Parameters.Add("@IdOrganizador", SqlDbType.Int).Value = idOrganizador;
 
+            // Una fila actualizada indica que la entrada cumplió todas las condiciones.
             return await comando.ExecuteNonQueryAsync() == 1;
         }
     }
