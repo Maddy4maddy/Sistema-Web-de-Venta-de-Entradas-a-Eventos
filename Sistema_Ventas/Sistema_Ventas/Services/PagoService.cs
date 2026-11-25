@@ -98,10 +98,92 @@ namespace Sistema_Ventas.Services
         {
             using SqlConnection conexion = conexionBD.ObtenerConexion();
             await conexion.OpenAsync();
-            string consulta = "UPDATE Reservas SET Estado = 'Pagada' WHERE IdReserva = @IdReserva";
-            using SqlCommand comando = new SqlCommand(consulta, conexion);
-            comando.Parameters.Add("@IdReserva", SqlDbType.Int).Value = idReserva;
-            await comando.ExecuteNonQueryAsync();
+
+            // Guardamos los cambios juntos.
+            using SqlTransaction transaccion = conexion.BeginTransaction();
+
+            try
+            {
+                int idUsuario;
+                decimal total;
+
+                // Buscamos el usuario de la reserva y calculamos el total.
+                string consultaReserva = @"
+            SELECT R.IdUsuario, R.Cantidad * S.Precio AS Total
+            FROM Reservas R
+            INNER JOIN Sectores S ON R.IdSector = S.IdSector
+            WHERE R.IdReserva = @IdReserva
+              AND R.Estado = 'Pendiente'
+              AND R.FechaExpiracion > GETDATE()";
+
+                using (SqlCommand comandoReserva =
+                    new SqlCommand(consultaReserva, conexion, transaccion))
+                {
+                    comandoReserva.Parameters.Add("@IdReserva", SqlDbType.Int).Value = idReserva;
+
+                    using SqlDataReader lector = await comandoReserva.ExecuteReaderAsync();
+
+                    if (!await lector.ReadAsync())
+                    {
+                        throw new InvalidOperationException(
+                            "La reserva ya no está pendiente o ha expirado.");
+                    }
+
+                    idUsuario = Convert.ToInt32(lector["IdUsuario"]);
+                    total = Convert.ToDecimal(lector["Total"]);
+                }
+
+                // Marcamos la reserva como pagada.
+                string actualizarReserva = @"
+            UPDATE Reservas
+            SET Estado = 'Pagada'
+            WHERE IdReserva = @IdReserva
+              AND Estado = 'Pendiente'
+              AND FechaExpiracion > GETDATE()";
+
+                using (SqlCommand comandoActualizar =
+                    new SqlCommand(actualizarReserva, conexion, transaccion))
+                {
+                    comandoActualizar.Parameters.Add("@IdReserva", SqlDbType.Int).Value = idReserva;
+
+                    int filasActualizadas = await comandoActualizar.ExecuteNonQueryAsync();
+
+                    if (filasActualizadas != 1)
+                    {
+                        throw new InvalidOperationException(
+                            "No se pudo confirmar la reserva.");
+                    }
+                }
+
+                // Creamos un código para la entrada.
+                string codigoEntrada = $"ENT-{Guid.NewGuid():N}".ToUpperInvariant();
+
+                // Guardamos la compra.
+                string insertarCompra = @"
+            INSERT INTO Compras (IdUsuario, IdReserva, Total, CodigoEntrada)
+            VALUES (@IdUsuario, @IdReserva, @Total, @CodigoEntrada)";
+
+                using (SqlCommand comandoCompra =
+                    new SqlCommand(insertarCompra, conexion, transaccion))
+                {
+                    comandoCompra.Parameters.Add("@IdUsuario", SqlDbType.Int).Value = idUsuario;
+                    comandoCompra.Parameters.Add("@IdReserva", SqlDbType.Int).Value = idReserva;
+                    comandoCompra.Parameters.Add("@Total", SqlDbType.Decimal).Value = total;
+                    comandoCompra.Parameters.Add("@CodigoEntrada", SqlDbType.VarChar, 50)
+                        .Value = codigoEntrada;
+
+                    await comandoCompra.ExecuteNonQueryAsync();
+                }
+
+                // Confirmamos los cambios.
+                await transaccion.CommitAsync();
+            }
+            catch
+            {
+                // Si algo falla, deshacemos los cambios.
+                await transaccion.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task<dynamic?> ObtenerResumenReserva(int idReserva)
