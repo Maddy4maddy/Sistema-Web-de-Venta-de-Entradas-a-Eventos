@@ -15,13 +15,18 @@ namespace Sistema_Ventas.Controllers
         private readonly PagoService pagoService;
         private readonly ReservaService reservaService;
         private readonly EntradaService entradaService;
+        private readonly ConfirmacionCompraCorreoService confirmacionCompraCorreoService;
+        private readonly ILogger<PagoController> logger;
         private readonly ConexionBD conexionBD;
 
-        public PagoController(PagoService pagoService, ReservaService reservaService, EntradaService entradaService, ConexionBD conexionBD)
+        public PagoController(PagoService pagoService, ReservaService reservaService, EntradaService entradaService,
+            ConfirmacionCompraCorreoService confirmacionCompraCorreoService, ILogger<PagoController> logger, ConexionBD conexionBD)
         {
             this.pagoService = pagoService;
             this.reservaService = reservaService;
             this.entradaService = entradaService;
+            this.confirmacionCompraCorreoService = confirmacionCompraCorreoService;
+            this.logger = logger;
             this.conexionBD = conexionBD;
         }
 
@@ -125,6 +130,17 @@ namespace Sistema_Ventas.Controllers
             if (idCompra.HasValue)
             {
                 TempData["IdCompra"] = idCompra.Value;
+
+                try
+                {
+                    int idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                    await confirmacionCompraCorreoService.EnviarConfirmacion(idCompra.Value, idUsuario);
+                }
+                catch (Exception error)
+                {
+                    logger.LogWarning("No se pudo enviar la confirmación de la compra {IdCompra}. Tipo: {TipoError}.",
+                        idCompra.Value, error.GetType().Name);
+                }
             }
 
             return RedirectToAction("ResultadoPago");
