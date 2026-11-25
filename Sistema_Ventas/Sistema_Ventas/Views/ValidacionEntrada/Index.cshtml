@@ -1,0 +1,37 @@
+@model Sistema_Ventas.ViewModels.ValidacionEntradaViewModel
+
+@{
+    ViewData["Title"] = "Validar entradas";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <h1 class="mb-2">Validar entradas</h1>
+            <p class="text-muted mb-4">Ingresa el código de la entrada para registrar el acceso a tu evento.</p>
+
+            @if (!string.IsNullOrEmpty(Model.Mensaje))
+            {
+                <div class="alert @(Model.Validada ? "alert-success" : "alert-danger")" role="alert">
+                    @Model.Mensaje
+                </div>
+            }
+
+            <form asp-controller="ValidacionEntrada" asp-action="Index" method="post">
+                <div class="mb-3">
+                    <label asp-for="Codigo" class="form-label">Código de entrada</label>
+                    <input asp-for="Codigo" class="form-control" autocomplete="off" autocapitalize="characters"
+                           placeholder="ENT-..." aria-describedby="ayudaCodigo" />
+                    <div id="ayudaCodigo" class="form-text">Puedes copiar el código impreso junto al QR del correo.</div>
+                    <span asp-validation-for="Codigo" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Validar entrada</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -7,6 +7,16 @@ ADD Estado varchar(20) NOT NULL
         CONSTRAINT DF_Compras_Estado DEFAULT ('Pagada');
 GO
 
+-- Relacionar cada evento con un organizador
+ALTER TABLE dbo.Eventos
+ADD IdOrganizador int NULL;
+GO
+
+ALTER TABLE dbo.Eventos
+ADD CONSTRAINT FK_Eventos_Usuarios_Organizador
+    FOREIGN KEY (IdOrganizador) REFERENCES dbo.Usuarios(IdUsuario);
+GO
+
 -- Entradas digitales generadas después del pago
 CREATE TABLE dbo.Entradas
 (

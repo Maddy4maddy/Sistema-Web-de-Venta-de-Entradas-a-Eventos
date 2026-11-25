@@ -25,6 +25,7 @@ builder.Services.AddScoped<EventoService>();
 builder.Services.AddScoped<ReservaService>();
 builder.Services.AddScoped<PagoService>(); 
 builder.Services.AddScoped<EntradaService>();
+builder.Services.AddScoped<ValidacionEntradaService>();
 builder.Services.AddScoped<ConfirmacionCompraCorreoService>();
 var app = builder.Build();
 
