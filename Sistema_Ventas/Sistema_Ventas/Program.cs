@@ -28,6 +28,7 @@ builder.Services.AddScoped<EntradaService>();
 builder.Services.AddScoped<ValidacionEntradaService>();
 builder.Services.AddScoped<ConfirmacionCompraCorreoService>();
 builder.Services.AddScoped<HistorialService>();
+builder.Services.AddScoped<AnulacionService>();
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

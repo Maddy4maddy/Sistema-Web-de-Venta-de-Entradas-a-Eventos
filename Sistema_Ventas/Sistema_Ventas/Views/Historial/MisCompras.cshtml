@@ -7,6 +7,15 @@
 <div class="container mt-5 mb-5">
     <h1 class="mb-4">Historial de compras</h1>
 
+    @if (TempData["ExitoAnulacion"] != null)
+    {
+        <div class="alert alert-success" role="status">@TempData["ExitoAnulacion"]</div>
+    }
+    @if (TempData["ErrorAnulacion"] != null)
+    {
+        <div class="alert alert-danger" role="alert">@TempData["ErrorAnulacion"]</div>
+    }
+
     @if (Model.Count == 0)
     {
         <div class="alert alert-info">
@@ -26,6 +35,7 @@
                         <th>Total</th>
                         <th>Códigos de entradas</th>
                         <th>Fecha de compra</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,11 +61,65 @@
                                 }
                             </td>
                             <td>@compra.FechaCompra.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                <span class="badge @(compra.EstadoCompra == "Pagada" ? "bg-success" : "bg-secondary")">
+                                    @compra.EstadoCompra
+                                </span>
+                                @if (compra.EstadoCompra == "Anulada")
+                                {
+                                    <div class="small text-muted mt-1">Entradas sin validez</div>
+                                }
+                                @if (compra.PuedeAnular)
+                                {
+                                    <button type="button" class="btn btn-link btn-sm text-danger p-0 mt-1 d-block text-nowrap"
+                                            data-bs-toggle="modal" data-bs-target="#anulacion-@compra.IdCompra"
+                                            aria-label="Solicitar anulación de @compra.NombreEvento">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                                             stroke-width="1.6" stroke-linecap="round" aria-hidden="true" class="me-1">
+                                            <circle cx="8" cy="8" r="6" />
+                                            <path d="M4 4l8 8" />
+                                        </svg>Anular
+                                    </button>
+                                }
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
+
+        @foreach (var compra in Model.Where(c => c.PuedeAnular))
+        {
+            <div class="modal fade" id="anulacion-@compra.IdCompra" tabindex="-1"
+                 aria-labelledby="titulo-anulacion-@compra.IdCompra" aria-describedby="aviso-anulacion-@compra.IdCompra">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <form asp-controller="Anulacion" asp-action="Solicitar" method="post" asp-antiforgery="true">
+                            <div class="modal-header">
+                                <h2 class="modal-title fs-5" id="titulo-anulacion-@compra.IdCompra">Anular compra</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="mb-2 fw-semibold">@compra.NombreEvento</p>
+                                <p class="text-muted mb-3">@compra.Cantidad entradas · ₡ @compra.Total.ToString("N2")</p>
+                                <p class="small mb-3" id="aviso-anulacion-@compra.IdCompra">
+                                    Se anularán todas las entradas y se registrará el reembolso simulado del total.
+                                    Esta acción no se puede deshacer.
+                                </p>
+                                <input type="hidden" name="IdCompra" value="@compra.IdCompra" />
+                                <label class="form-label" for="motivo-@compra.IdCompra">Motivo de anulación</label>
+                                <textarea id="motivo-@compra.IdCompra" name="Motivo" class="form-control"
+                                          rows="3" maxlength="500" required></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                                <button type="submit" class="btn btn-danger">Confirmar anulación</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
     }
 
     <a asp-controller="Evento" asp-action="Cartelera" class="btn btn-primary">

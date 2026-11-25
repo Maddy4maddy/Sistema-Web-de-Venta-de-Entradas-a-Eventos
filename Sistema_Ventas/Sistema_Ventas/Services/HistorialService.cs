@@ -30,7 +30,11 @@ namespace Sistema_Ventas.Services
                     R.Cantidad,
                     C.Total,
                     T.Codigo,
-                    C.FechaCompra
+                    T.Estado AS EstadoEntrada,
+                    C.FechaCompra,
+                    C.Estado AS EstadoCompra,
+                    R.Estado AS EstadoReserva,
+                    CASE WHEN E.Fecha > GETDATE() THEN 1 ELSE 0 END AS EventoFuturo
                 FROM Compras C
                 INNER JOIN Reservas R ON C.IdReserva = R.IdReserva
                 INNER JOIN Sectores S ON R.IdSector = S.IdSector
@@ -58,7 +62,10 @@ namespace Sistema_Ventas.Services
                         NombreSector = lector["NombreSector"].ToString()!,
                         Cantidad = Convert.ToInt32(lector["Cantidad"]),
                         Total = Convert.ToDecimal(lector["Total"]),
-                        FechaCompra = Convert.ToDateTime(lector["FechaCompra"])
+                        FechaCompra = Convert.ToDateTime(lector["FechaCompra"]),
+                        EstadoCompra = lector["EstadoCompra"].ToString()!,
+                        EventoFuturo = Convert.ToInt32(lector["EventoFuturo"]) == 1 &&
+                            lector["EstadoReserva"].ToString() == "Pagada"
                     };
                     compras.Add(compraActual);
                 }
@@ -66,6 +73,10 @@ namespace Sistema_Ventas.Services
                 if (lector["Codigo"] is string codigo)
                 {
                     compraActual.CodigosEntradas.Add(codigo);
+                    if (lector["EstadoEntrada"].ToString() == "Emitida")
+                    {
+                        compraActual.EntradasEmitidas++;
+                    }
                 }
             }
 
