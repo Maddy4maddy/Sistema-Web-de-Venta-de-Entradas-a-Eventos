@@ -1,0 +1,133 @@
+@model Sistema_Ventas.ViewModels.ReporteVentasOrganizadorViewModel
+
+@{
+    ViewData["Title"] = "Reportes de ventas";
+}
+
+<div class="container mt-5 mb-5">
+    <h1 class="mb-4">Reportes de ventas</h1>
+
+    <form asp-controller="ReporteVentasOrganizador"
+          asp-action="VerReporteVentas"
+          method="get"
+          class="row align-items-end mb-4">
+
+        <div class="col-md-8 mb-3">
+            <label for="idEvento" class="form-label">Evento</label>
+
+            <select id="idEvento"
+                    name="idEvento"
+                    class="form-select">
+                <option value="">Selecciona un evento</option>
+
+                @foreach (var evento in Model.Eventos)
+                {
+                    if (Model.IdEventoSeleccionado == evento.IdEvento)
+                    {
+                        <option value="@evento.IdEvento" selected>
+                            @evento.Nombre
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@evento.IdEvento">
+                            @evento.Nombre
+                        </option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <button type="submit" class="btn btn-primary">
+                Ver reporte
+            </button>
+        </div>
+    </form>
+
+    @if (Model.Eventos.Count == 0)
+    {
+        <div class="alert alert-info">
+            Aún no tienes eventos para mostrar.
+        </div>
+    }
+    else if (!Model.IdEventoSeleccionado.HasValue)
+    {
+        <div class="alert alert-info">
+            Selecciona uno de tus eventos para ver el reporte.
+        </div>
+    }
+    else
+    {
+        <h2 class="h4 mb-3">@Model.NombreEvento</h2>
+
+        @if (Model.FechaEvento.HasValue)
+        {
+            <p>
+                Fecha del evento:
+                @Model.FechaEvento.Value.ToString("dd/MM/yyyy HH:mm")
+            </p>
+        }
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <div class="card p-3 h-100">
+                    <h3 class="h5">Entradas vendidas</h3>
+                    <p class="fs-3 mb-0">@Model.EntradasVendidas</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="card p-3 h-100">
+                    <h3 class="h5">Recaudación</h3>
+                    <p class="fs-3 mb-0">
+                        ₡ @Model.RecaudacionTotal.ToString("N2")
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="h4 mb-3">Ocupación por sector</h3>
+
+        @if (Model.Sectores.Count == 0)
+        {
+            <div class="alert alert-info">
+                Este evento todavía no tiene sectores.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Sector</th>
+                            <th>Entradas vendidas</th>
+                            <th>Aforo</th>
+                            <th>Ocupación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sector in Model.Sectores)
+                        {
+                            <tr>
+                                <td>@sector.NombreSector</td>
+                                <td>@sector.EntradasVendidas</td>
+                                <td>@sector.Capacidad</td>
+                                <td>
+                                    @sector.PorcentajeOcupacion.ToString("N2")%
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+
+    <a asp-controller="Organizador"
+       asp-action="MisEventos"
+       class="btn btn-outline-secondary mt-3">
+        Volver a mis eventos
+    </a>
+</div>

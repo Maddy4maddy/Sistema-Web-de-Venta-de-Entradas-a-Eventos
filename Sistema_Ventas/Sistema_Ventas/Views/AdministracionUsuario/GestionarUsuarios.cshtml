@@ -1,0 +1,122 @@
+@model Sistema_Ventas.ViewModels.GestionUsuariosViewModel
+
+@{
+    ViewData["Title"] = "Gestionar usuarios";
+}
+
+<div class="container mt-5 mb-5">
+    <h1 class="mb-4">Gestionar usuarios y organizadores</h1>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (Model.Usuarios.Count == 0)
+    {
+        <div class="alert alert-info">
+            No hay usuarios registrados.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var usuario in Model.Usuarios)
+                    {
+                        <tr>
+                            <td>@usuario.Nombre @usuario.Apellido</td>
+                            <td>@usuario.Correo</td>
+                            <td>
+                                <form asp-action="CambiarRol" method="post">
+                                    <input type="hidden"
+                                           name="idUsuario"
+                                           value="@usuario.IdUsuario" />
+
+                                    <div class="d-flex gap-2">
+                                        <select name="idRol" class="form-select">
+                                            @foreach (var rol in Model.Roles)
+                                            {
+                                                if (rol.IdRol == usuario.IdRol)
+                                                {
+                                                    <option value="@rol.IdRol" selected>
+                                                        @rol.Nombre
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@rol.IdRol">
+                                                        @rol.Nombre
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+
+                                        <button type="submit" class="btn btn-primary">
+                                            Guardar
+                                        </button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td>
+                                @if (usuario.Activo)
+                                {
+                                    <span class="badge bg-success">Activo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Bloqueado</span>
+                                }
+                            </td>
+                            <td>
+                                <form asp-action="CambiarEstado" method="post">
+                                    <input type="hidden"
+                                           name="idUsuario"
+                                           value="@usuario.IdUsuario" />
+
+                                    @if (usuario.Activo)
+                                    {
+                                        <button type="submit"
+                                                name="activo"
+                                                value="false"
+                                                class="btn btn-outline-danger">
+                                            Bloquear
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit"
+                                                name="activo"
+                                                value="true"
+                                                class="btn btn-outline-success">
+                                            Activar
+                                        </button>
+                                    }
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

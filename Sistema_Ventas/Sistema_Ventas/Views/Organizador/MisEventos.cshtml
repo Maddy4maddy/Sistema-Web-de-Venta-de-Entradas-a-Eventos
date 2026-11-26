@@ -1,0 +1,117 @@
+@model List<Sistema_Ventas.Models.Evento>
+
+@{
+    ViewData["Title"] = "Mis eventos";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Mis eventos</h1>
+
+        <a asp-controller="Organizador"
+           asp-action="CrearEvento"
+           class="btn btn-primary">
+            Crear evento
+        </a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info">
+            Todavía no tienes eventos registrados.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Evento</th>
+                        <th>Fecha</th>
+                        <th>Ciudad</th>
+                        <th>Precio desde</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var evento in Model)
+                    {
+                        <tr>
+                            <td>@evento.Nombre</td>
+                            <td>@evento.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@evento.Ciudad</td>
+                            <td>₡ @evento.PrecioInicial.ToString("N2")</td>
+                            <td>
+                                @if (evento.Activo)
+                                {
+                                    <span class="badge bg-success">Publicado</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">No publicado</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a asp-controller="Organizador"
+                                       asp-action="EditarEvento"
+                                       asp-route-id="@evento.IdEvento"
+                                       class="btn btn-outline-primary">
+                                        Editar
+                                    </a>
+
+                                    @if (evento.Activo)
+                                    {
+                                        <form asp-controller="Organizador"
+                                              asp-action="CancelarEvento"
+                                              method="post">
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@evento.IdEvento" />
+
+                                            <button type="submit"
+                                                    class="btn btn-outline-danger">
+                                                Cancelar
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-controller="Organizador"
+                                              asp-action="PublicarEvento"
+                                              method="post">
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@evento.IdEvento" />
+
+                                            <button type="submit"
+                                                    class="btn btn-success">
+                                                Publicar
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

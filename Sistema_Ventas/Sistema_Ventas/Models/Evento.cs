@@ -1,4 +1,4 @@
-﻿
+
 namespace Sistema_Ventas.Models
 {
     public class Evento
@@ -24,5 +24,6 @@ namespace Sistema_Ventas.Models
         public bool Activo { get; set; }
 
         public DateTime FechaCreacion { get; set; }
+        public int? IdOrganizador { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Sistema_Ventas.Data;
 using Sistema_Ventas.ViewModels;
 using System.Data;
@@ -14,7 +14,8 @@ namespace Sistema_Ventas.Services
             this.conexionBD = conexionBD;
         }
 
-        public async Task<List<CompraHistorialViewModel>> ObtenerComprasPorUsuario(int idUsuario)
+        public async Task<List<CompraHistorialViewModel>> ObtenerComprasPorUsuario(
+            int idUsuario)
         {
             var compras = new List<CompraHistorialViewModel>();
 
@@ -34,7 +35,13 @@ namespace Sistema_Ventas.Services
                     C.FechaCompra,
                     C.Estado AS EstadoCompra,
                     R.Estado AS EstadoReserva,
-                    CASE WHEN E.Fecha > GETDATE() THEN 1 ELSE 0 END AS EventoFuturo
+                    CASE WHEN E.Fecha > GETDATE() THEN 1 ELSE 0 END AS EventoFuturo,
+                    CASE WHEN EXISTS (
+                        SELECT 1
+                        FROM SolicitudesAnulacion SA
+                        WHERE SA.IdCompra = C.IdCompra
+                          AND SA.Estado = 'Aprobada'
+                    ) THEN 1 ELSE 0 END AS ReembolsoAprobado
                 FROM Compras C
                 INNER JOIN Reservas R ON C.IdReserva = R.IdReserva
                 INNER JOIN Sectores S ON R.IdSector = S.IdSector
@@ -52,6 +59,7 @@ namespace Sistema_Ventas.Services
             while (await lector.ReadAsync())
             {
                 int idCompra = Convert.ToInt32(lector["IdCompra"]);
+
                 if (compraActual == null || compraActual.IdCompra != idCompra)
                 {
                     compraActual = new CompraHistorialViewModel
@@ -64,15 +72,20 @@ namespace Sistema_Ventas.Services
                         Total = Convert.ToDecimal(lector["Total"]),
                         FechaCompra = Convert.ToDateTime(lector["FechaCompra"]),
                         EstadoCompra = lector["EstadoCompra"].ToString()!,
-                        EventoFuturo = Convert.ToInt32(lector["EventoFuturo"]) == 1 &&
+                        ReembolsoAprobado =
+                            Convert.ToInt32(lector["ReembolsoAprobado"]) == 1,
+                        EventoFuturo =
+                            Convert.ToInt32(lector["EventoFuturo"]) == 1 &&
                             lector["EstadoReserva"].ToString() == "Pagada"
                     };
+
                     compras.Add(compraActual);
                 }
 
                 if (lector["Codigo"] is string codigo)
                 {
                     compraActual.CodigosEntradas.Add(codigo);
+
                     if (lector["EstadoEntrada"].ToString() == "Emitida")
                     {
                         compraActual.EntradasEmitidas++;

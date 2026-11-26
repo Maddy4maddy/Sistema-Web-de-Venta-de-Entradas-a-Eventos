@@ -1,4 +1,4 @@
-﻿namespace Sistema_Ventas.ViewModels
+namespace Sistema_Ventas.ViewModels
 {
     public class CompraHistorialViewModel
     {
@@ -11,10 +11,15 @@
         public List<string> CodigosEntradas { get; set; } = new List<string>();
         public DateTime FechaCompra { get; set; }
         public string EstadoCompra { get; set; } = string.Empty;
+        public bool ReembolsoAprobado { get; set; }
         public bool EventoFuturo { get; set; }
         public int EntradasEmitidas { get; set; }
 
-        public bool PuedeAnular => EstadoCompra == "Pagada" && EventoFuturo &&
-            Cantidad > 0 && CodigosEntradas.Count == Cantidad && EntradasEmitidas == Cantidad;
+        public bool PuedeAnular =>
+            EstadoCompra == "Pagada" &&
+            EventoFuturo &&
+            Cantidad > 0 &&
+            CodigosEntradas.Count == Cantidad &&
+            EntradasEmitidas == Cantidad;
     }
 }
